@@ -14,11 +14,9 @@ const uriToPattern = (uri) => {
       .replaceAll("@", "")
       .replaceAll("~", "")
       .replaceAll("'", "")
-      .replaceAll('"', "")}/${!uri.includes(".") ? "*.*" : ""}`;
+      .replaceAll('"', "")}/${!uri.includes(".") ? "*.js*" : ""}`;
   }
-  const splitedPath = uri.split("/");
-  const themeNameIndex = splitedPath.findIndex((p) => p === "themes") + 1;
-  return `**/themes/**/${splitedPath.slice(themeNameIndex + 1).join("/")}`;
+  return `**/themes/**/${trimBaseUri(uri)}`;
 };
 
 const trimBaseUri = (uri) => {
@@ -40,10 +38,11 @@ const openFilePromptFromPattern = async (pattern) => {
       description: trimBaseUri(f.fsPath),
     }));
 
-  if(filtered.length === 1){
+  if (filtered.length === 1) {
+    vscode.window.showInformationMessage("Only founded this file");
     const document = await vscode.workspace.openTextDocument(filtered[0].path);
     await vscode.window.showTextDocument(document);
-    return
+    return;
   }
 
   const selectedFile = await vscode.window.showQuickPick(filtered, {
@@ -54,7 +53,7 @@ const openFilePromptFromPattern = async (pattern) => {
 
   const document = await vscode.workspace.openTextDocument(selectedFile.path);
   await vscode.window.showTextDocument(document);
-  return
+  return;
 };
 
 module.exports = {
