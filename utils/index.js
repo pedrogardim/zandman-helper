@@ -46,7 +46,7 @@ const openFilePromptFromPattern = async (pattern) => {
   }
 
   const selectedFile = await vscode.window.showQuickPick(filtered, {
-    placeHolder: "We found:",
+    placeHolder: "Found:",
   });
 
   if (!selectedFile) return;
